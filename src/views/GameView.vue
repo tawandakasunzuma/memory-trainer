@@ -25,9 +25,9 @@ const maxTries = 3
 const colors = ['red', 'blue', 'green', 'yellow']
 
 const speeds = {
-    easy: 1000,
-    medium: 700,
-    hard: 400
+    easy: 1200,
+    medium: 600,
+    hard: 300
 }
 
 // High score
@@ -75,12 +75,15 @@ function playSequence() {
     sequence.value.forEach((color, index) => {
         setTimeout(() => {
             flashColor(color)
-
-            if (index === sequence.value.length - 1) {
-                isPlaying.value = false
-            }
         }, (index + 1) * speeds[props.difficulty])
     })
+
+    // Wait after sequence finishes before enabling input
+    const totalTime = sequence.value.length * speeds[props.difficulty]
+
+    setTimeout(() => {
+        isPlaying.value = false
+    }, totalTime + 600) // Delay
 }
 
 // Flash color effect
@@ -117,7 +120,7 @@ function handleUserClick(color) {
 
         setTimeout(() => {
             playSequence()
-        }, 1000)
+        }, 1200)
 
         return
     }
@@ -144,7 +147,7 @@ function handleUserClick(color) {
 
         <GameBoard :colors="colors" :isPlaying="isPlaying" :gameOver="gameOver" :handleUserClick="handleUserClick" />
 
-        <button v-if="gameOver" @click="$emit('restart')">
+        <button v-if="gameOver" @click="$emit('restart')" class="back-menu-btn">
             Back to Menu
         </button>
 

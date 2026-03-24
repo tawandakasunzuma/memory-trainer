@@ -48,7 +48,10 @@ function startGame() {
     nextLevel()
 }
 
-startGame()
+// Add a delay before starting the first level
+setTimeout(() => {
+    nextLevel()
+}, 600)
 
 // Advance to next level
 function nextLevel() {
@@ -58,10 +61,8 @@ function nextLevel() {
     const randomColor = colors[Math.floor(Math.random() * colors.length)]
     sequence.value.push(randomColor)
 
-    score.value = level.value - 1
-
-    if (score.value > highScore.value) {
-        highScore.value = score.value
+    if (level.value > highScore.value) {
+        highScore.value = level.value
         localStorage.setItem('highScore', highScore.value)
     }
 

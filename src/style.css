@@ -74,7 +74,7 @@ button {
   cursor: pointer;
   border-radius: 0.5rem;
   background-color: var(--blue-color);
-  border: 1.5px solid transparent;
+  border: 2px solid transparent;
   color: var(--white-color);
   box-shadow: 0 0 1rem rgba(0, 0, 0, 0.25);
   transition: 300ms ease all;

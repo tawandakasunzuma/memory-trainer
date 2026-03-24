@@ -1,6 +1,6 @@
 :root {
   --black-color: #0f172a;
-  --blue-color : #1e293b;
+  --blue-color: #1e293b;
   --white-color: #ffffff;
 }
 
@@ -27,8 +27,8 @@ body {
   max-width: 450px;
   padding: 2rem;
   background: var(--blue-color);
-  border-radius: 0.5rem;
-  box-shadow: 0 1rem 2rem rgba(0,0,0,0.25);
+  border-radius: 1rem;
+  box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.25);
 }
 
 /* ========== 
@@ -53,7 +53,7 @@ body {
 }
 
 .difficulty-heading {
-  margin: 2rem 0 1rem 0;
+  margin: 2rem 0 1rem;
 }
 
 .gameover {
@@ -65,12 +65,46 @@ body {
   Buttons
 ========== */
 button {
-  margin: 10px;
-  padding: 12px 16px;
-  font-size: 16px;
+  margin: 1rem 0.5rem 2rem 0.5rem;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
   cursor: pointer;
-  border-radius: 8px;
-  border: none;
+  border-radius: 0.5rem;
+  background-color: var(--blue-color);
+  border: 1.5px solid transparent;
+  color: var(--white-color);
+  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.25);
+  transition: 300ms ease all;
+}
+
+button:hover,
+button:focus {
+  border-color: var(--white-color);
+  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.5);
+}
+
+button:active {
+  opacity: 0.5;
+  transform: scale(0.975);
+}
+
+/* Selected difficulty */
+button.selected {
+  border-color: var(--white-color);
+  background-color: var(--black-color);
+  box-shadow: 0 0 1rem rgba(0, 0, 0, 0.5);
+}
+
+button.selected.easy {
+  border-color: #22c55e;
+}
+
+button.selected.medium {
+  border-color: #f59e0b;
+}
+
+button.selected.hard {
+  border-color: #ef4444;
 }
 
 .start-btn {

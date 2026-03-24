@@ -31,11 +31,17 @@ function setDifficulty(level) {
     <p>Each level gets harder</p>
     <p>You have 3 tries</p>
     <h3 class="difficulty-heading">Select Difficulty</h3>
-    <button @click="setDifficulty('easy')">Easy</button>
-    <button @click="setDifficulty('medium')">Medium</button>
-    <button @click="setDifficulty('hard')">Hard</button>
+    <button @click="setDifficulty('easy')" :class="['easy', { selected: difficulty === 'easy' }]">
+      Easy
+    </button>
 
-    <br />
+    <button @click="setDifficulty('medium')" :class="['medium', { selected: difficulty === 'medium' }]">
+      Medium
+    </button>
+
+    <button @click="setDifficulty('hard')" :class="['hard', { selected: difficulty === 'hard' }]">
+      Hard
+    </button>
 
     <button class="start-btn" @click="startGame">
       Start Game

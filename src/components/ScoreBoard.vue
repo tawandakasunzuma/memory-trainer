@@ -3,7 +3,7 @@ defineProps(['level', 'score', 'highScore'])
 </script>
 
 <template>
-  <div>
+  <div class="scoreboard">
     <h2>Level: {{ level }}</h2>
     <h2>Score: {{ score }}</h2>
     <h2>High Score: {{ highScore }}</h2>

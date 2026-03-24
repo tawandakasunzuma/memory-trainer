@@ -27,9 +27,11 @@ function setDifficulty(level) {
 
   <div v-else class="start-screen">
     <h1 class="app-name">Memory Trainer</h1>
-    <p>Watch the pattern and repeat it</p>
-    <p>Each level gets harder</p>
-    <p>You have 3 tries</p>
+    <div class="app-description">
+      <p>Watch the pattern and repeat it</p>
+      <p>Each level gets harder</p>
+      <p>You have 3 tries</p>
+    </div>
     <h3 class="difficulty-heading">Select Difficulty</h3>
     <button @click="setDifficulty('easy')" :class="['easy', { selected: difficulty === 'easy' }]">
       Easy

@@ -26,6 +26,7 @@ function setDifficulty(level) {
   <GameView v-if="gameStarted" :difficulty="difficulty" @restart="restartGame" />
 
   <div v-else class="start-screen">
+    <img src="../public/logo.png" alt="App logo" class="logo">
     <h1 class="app-name">Memory Trainer</h1>
     <div class="app-description">
       <p>Watch the pattern and repeat it</p>

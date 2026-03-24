@@ -17,6 +17,7 @@ const level = ref(0)
 const score = ref(0)
 const isPlaying = ref(false)
 const gameOver = ref(false)
+const activeColor = ref(null)
 
 // Tries system
 const tries = ref(3)
@@ -25,14 +26,18 @@ const maxTries = 3
 const colors = ['red', 'blue', 'green', 'yellow']
 
 const speeds = {
-    easy: 1200,
+    easy: 900,
     medium: 600,
     hard: 300
 }
 
-// High score
+// High score (per difficulty)
+function getHighScoreKey() {
+    return `highScore_${props.difficulty}`
+}
+
 const highScore = ref(
-    Number(localStorage.getItem('highScore')) || 0
+    Number(localStorage.getItem(getHighScoreKey())) || 0
 )
 
 // Start game
@@ -61,11 +66,6 @@ function nextLevel() {
     const randomColor = colors[Math.floor(Math.random() * colors.length)]
     sequence.value.push(randomColor)
 
-    if (level.value > highScore.value) {
-        highScore.value = level.value
-        localStorage.setItem('highScore', highScore.value)
-    }
-
     playSequence()
 }
 
@@ -73,30 +73,39 @@ function nextLevel() {
 function playSequence() {
     isPlaying.value = true
 
+    const speed = speeds[props.difficulty]
+    const gap = 150 // space between flashes
+
     sequence.value.forEach((color, index) => {
         setTimeout(() => {
             flashColor(color)
-        }, (index + 1) * speeds[props.difficulty])
+        }, (index + 1) * (speed + gap))
     })
 
-    // Wait after sequence finishes before enabling input
-    const totalTime = sequence.value.length * speeds[props.difficulty]
+    // Total time including gaps
+    const totalTime = sequence.value.length * (speed + gap)
 
+    // Small pause after sequence ends before user can play
     setTimeout(() => {
         isPlaying.value = false
-    }, totalTime + 600) // Delay
+    }, totalTime + 600)
 }
 
 // Flash color effect
 function flashColor(color) {
+    activeColor.value = color
+
     const button = document.querySelector(`.${color}`)
     if (!button) return
 
     button.classList.add('active')
 
+    const flashTime = Math.max(300, speeds[props.difficulty] * 0.6)
+
     setTimeout(() => {
         button.classList.remove('active')
-    }, 250)
+        activeColor.value = null
+    }, flashTime)
 }
 
 // Handle user input
@@ -126,8 +135,18 @@ function handleUserClick(color) {
         return
     }
 
-    // Check if level is completed
+    // Check if level is complete
     if (userSequence.value.length === sequence.value.length) {
+        score.value = level.value
+
+        // Update high score per difficulty
+        const key = getHighScoreKey()
+
+        if (score.value > highScore.value) {
+            highScore.value = score.value
+            localStorage.setItem(key, score.value)
+        }
+
         setTimeout(nextLevel, 1000)
     }
 }
@@ -146,7 +165,8 @@ function handleUserClick(color) {
             </span>
         </div>
 
-        <GameBoard :colors="colors" :isPlaying="isPlaying" :gameOver="gameOver" :handleUserClick="handleUserClick" />
+        <GameBoard :colors="colors" :isPlaying="isPlaying" :gameOver="gameOver" :handleUserClick="handleUserClick"
+            :activeColor="activeColor" />
 
         <button v-if="gameOver" @click="$emit('restart')" class="back-menu-btn">
             Back to Menu

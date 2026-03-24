@@ -32,6 +32,15 @@ body {
 }
 
 /* ========== 
+  Logo
+========== */
+.logo {
+  width: 2.5rem;
+  border-radius: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+/* ========== 
   Text
 ========== */
 
@@ -184,7 +193,7 @@ button.selected.hard {
   place-items: center;
   width: 350px;
   height: 350px;
-  margin: 1rem auto;
+  margin: 1rem auto 0rem;
   background-color: rgba(15, 23, 42, 0.5);
   border-radius: 0.5rem;
   box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.25);
@@ -229,20 +238,17 @@ button.selected.hard {
 }
 
 /* ========== 
-  Flash effect
+  Flash Blocks
 ========== */
 
-.color.active {
-  transform: scale(0.85);
+.color.dimmed {
+  opacity: 0.5;
 }
 
-/* ========== 
-  Disabled buttons
-========== */
-
-.color:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+.color.active {
+  opacity: 1;
+  transform: scale(0.85);
+  transition: all 150ms ease;
 }
 
 /* ========== 

@@ -26,9 +26,9 @@ const maxTries = 3
 const colors = ['red', 'blue', 'green', 'yellow']
 
 const speeds = {
-    easy: 900,
-    medium: 600,
-    hard: 300
+    easy: 600,
+    medium: 300,
+    hard: 150
 }
 
 // High score (per difficulty)
@@ -56,7 +56,7 @@ function startGame() {
 // Add a delay before starting the first level
 setTimeout(() => {
     nextLevel()
-}, 600)
+}, 150)
 
 // Advance to next level
 function nextLevel() {
@@ -74,12 +74,12 @@ function playSequence() {
     isPlaying.value = true
 
     const speed = speeds[props.difficulty]
-    const gap = 150 // space between flashes
+    const gap = speeds[props.difficulty] * 0.6 // space between flashes
 
     sequence.value.forEach((color, index) => {
         setTimeout(() => {
             flashColor(color)
-        }, (index + 1) * (speed + gap))
+        }, index * (speed + gap))
     })
 
     // Total time including gaps
@@ -100,7 +100,7 @@ function flashColor(color) {
 
     button.classList.add('active')
 
-    const flashTime = Math.max(300, speeds[props.difficulty] * 0.6)
+    const flashTime = Math.max(150, speeds[props.difficulty] * 0.6)
 
     setTimeout(() => {
         button.classList.remove('active')
@@ -168,8 +168,8 @@ function handleUserClick(color) {
         <GameBoard :colors="colors" :isPlaying="isPlaying" :gameOver="gameOver" :handleUserClick="handleUserClick"
             :activeColor="activeColor" />
 
-        <button v-if="gameOver" @click="$emit('restart')" class="back-menu-btn">
-            Back to Menu
+        <button @click="$emit('restart')" class="back-menu-btn">
+            {{ gameOver ? 'Play Again' : 'Back to Menu' }}
         </button>
 
     </div>

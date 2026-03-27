@@ -1,6 +1,6 @@
 <script setup>
 defineProps({
-  progress: Number
+  progress: Number // percentage value (0–100)
 })
 </script>
 

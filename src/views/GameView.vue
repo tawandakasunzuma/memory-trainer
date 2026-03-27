@@ -4,41 +4,44 @@ import GameBoard from '../components/GameBoard.vue'
 import ScoreBoard from '../components/ScoreBoard.vue'
 import ProgressBar from '../components/ProgressBar.vue'
 
+// Receive difficulty from parent
 const props = defineProps({
     difficulty: String
 })
 
+// Event emitter to restart game
 const emit = defineEmits(['restart'])
 
 // Game state
-const sequence = ref([])
-const userSequence = ref([])
-const level = ref(0)
-const score = ref(0)
-const isPlaying = ref(false)
-const gameOver = ref(false)
-const activeColor = ref(null)
+const sequence = ref([]) // generated color sequence
+const userSequence = ref([]) // what user clicks
+const level = ref(0) // current level
+const score = ref(0) // current score
+const isPlaying = ref(false) // true while sequence is shown
+const gameOver = ref(false) // true if player lost
+const activeColor = ref(null) // currently flashing color
 
-// Tries system
-const tries = ref(3)
-const maxTries = 3
+// Lives
+const tries = ref(3) // current remaining tries
+const maxTries = 3 // maximum allowed tries
 
+// Available colors for game
 const colors = ['red', 'blue', 'green', 'yellow']
 
+// Flash speeds by difficulty
 const speeds = {
     easy: 600,
     medium: 300,
     hard: 150
 }
 
-// High score (per difficulty)
+// High score per difficulty
 function getHighScoreKey() {
     return `highScore_${props.difficulty}`
 }
 
-const highScore = ref(
-    Number(localStorage.getItem(getHighScoreKey())) || 0
-)
+// High score
+const highScore = ref(Number(localStorage.getItem(getHighScoreKey())) || 0)
 
 // Start game
 function startGame() {
@@ -47,26 +50,25 @@ function startGame() {
     level.value = 0
     score.value = 0
     gameOver.value = false
-
     tries.value = maxTries
-
-    nextLevel()
+    nextLevel()  // start first level
 }
 
-// Add a delay before starting the first level
+// Small delay before first level starts
 setTimeout(() => {
     nextLevel()
 }, 150)
 
-// Advance to next level
+// Go to next level
 function nextLevel() {
     level.value++
     userSequence.value = []
 
+    // pick a random color
     const randomColor = colors[Math.floor(Math.random() * colors.length)]
     sequence.value.push(randomColor)
 
-    playSequence()
+    playSequence() // show sequence to player
 }
 
 // Show sequence to user
@@ -74,7 +76,7 @@ function playSequence() {
     isPlaying.value = true
 
     const speed = speeds[props.difficulty]
-    const gap = speeds[props.difficulty] * 0.6 // space between flashes
+    const gap = speed * 0.6 // pause between flashes
 
     sequence.value.forEach((color, index) => {
         setTimeout(() => {
@@ -82,16 +84,15 @@ function playSequence() {
         }, index * (speed + gap))
     })
 
-    // Total time including gaps
     const totalTime = sequence.value.length * (speed + gap)
 
-    // Small pause after sequence ends before user can play
+    // allow user input after sequence ends
     setTimeout(() => {
         isPlaying.value = false
     }, totalTime + 600)
 }
 
-// Flash color effect
+// Flash button effect
 function flashColor(color) {
     activeColor.value = color
 
@@ -110,13 +111,12 @@ function flashColor(color) {
 
 // Handle user input
 function handleUserClick(color) {
-    if (isPlaying.value || gameOver.value) return
+    if (isPlaying.value || gameOver.value) return;
 
-    userSequence.value.push(color)
+    userSequence.value.push(color);
+    const index = userSequence.value.length - 1;
 
-    const index = userSequence.value.length - 1
-
-    // Check if user input is correct
+    // wrong input
     if (userSequence.value[index] !== sequence.value[index]) {
         tries.value--
 
@@ -125,29 +125,27 @@ function handleUserClick(color) {
             return
         }
 
-        // Allow retry of the same sequence
+        // retry same sequence
         userSequence.value = []
-
         setTimeout(() => {
             playSequence()
         }, 1200)
+        return;
 
-        return
     }
 
-    // Check if level is complete
+    // correct sequence completed
     if (userSequence.value.length === sequence.value.length) {
         score.value = level.value
 
-        // Update high score per difficulty
+        // update high score
         const key = getHighScoreKey()
-
         if (score.value > highScore.value) {
             highScore.value = score.value
             localStorage.setItem(key, score.value)
         }
 
-        setTimeout(nextLevel, 1000)
+        setTimeout(nextLevel, 600)
     }
 }
 </script>
@@ -155,19 +153,24 @@ function handleUserClick(color) {
 <template>
     <div class="game-view">
 
+        <!-- Score info -->
         <ScoreBoard :level="level" :score="score" :highScore="highScore" />
 
+        <!-- Progress bar -->
         <ProgressBar :progress="level * 10" />
 
+        <!-- Lives display -->
         <div class="lives">
             <span v-for="n in tries" :key="n" class="heart">
                 <img src="../assets/heart.png" alt="Heart icon">
             </span>
         </div>
 
+        <!-- Game buttons -->
         <GameBoard :colors="colors" :isPlaying="isPlaying" :gameOver="gameOver" :handleUserClick="handleUserClick"
             :activeColor="activeColor" />
 
+        <!-- Restart / back button -->
         <button @click="$emit('restart')" class="back-menu-btn">
             {{ gameOver ? 'Play Again' : 'Back to Menu' }}
         </button>

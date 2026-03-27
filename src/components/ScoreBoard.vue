@@ -1,5 +1,9 @@
 <script setup>
-defineProps(['level', 'score', 'highScore'])
+defineProps({
+  level: Number, // game level
+  score: Number, // current score
+  highScore: Number // high score
+})
 </script>
 
 <template>
